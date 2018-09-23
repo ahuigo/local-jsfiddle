@@ -1,2 +1,16 @@
 # local-jsfiddle
-Mini Js Fiddle for local.
+Mini Js Fiddle for local. It supports:
+- [x] Support Shortcuts:  use `F5` to run
+- [x] Support Toggle auto run
+- [x] Support Copy rendered page and editor
+- [x] Support open new page
+- [x] Support load js
+
+Add the following special url into your browser's bookmark:
+
+    data:text/html,<body oninput="autorun.checked && run()"> <style> textarea,iframe{width:49%;height:48%} body{margin:0} textarea{width:49%;font-size:18} </style> <textarea placeholder=HTML id=h></textarea> <textarea placeholder=CSS id=c></textarea> <div> <button onclick="loadjs(this)">dexie</button> <input type="checkbox" id="autorun" checked> AutoRun <button onclick="run()">Run</button> <button onclick="open_page('page')">Open Page</button> <button onclick="copy_html('page')">Copy Page</button> <button onclick="copy_html('editor')">Copy Editor</button> <span style="color:red" id=msg></span> F5: Run; MacOSX Tips: Ctrl+A:Head, Ctrl+E:End, Ctrl+F:Right, Ctrl+B:Left, Ctrl+N:Next Line, Ctrl+P: Previous Line </div> <textarea placeholder=JS id=j></textarea> <iframe id=i></iframe> <script> let cdnjs = { 'dexie': 'https://unpkg.com/dexie@latest/dist/dexie.js', }; document.addEventListener('keydown', e=>{ if (e.keyCode === 9 && e.target.tagName === 'TEXTAREA') { var target = e.target; var start = target.selectionStart; var end = target.selectionEnd; target.value=target.value.slice(0, start) + "\t" + target.value.slice(end); target.selectionStart = target.selectionEnd = start + 1; e.preventDefault(); }else if(e.key==='F5'){ run(); } }); function loadjs(target){ let src = cdnjs[target.innerText]; h.value = `<script src="${src}"></`+`script>`+ h.value; } function run(){ i.srcdoc=h.value+'<style>'+c.value+'</style><script>'+j.value+'<\/script>'; } function open_page(type){ let h = `${i.srcdoc}`; console.log(h); let page = window.open('blank.html'); page.document.write(h); } function copy_html(type){ if(type === 'page'){ text = `${i.srcdoc}`; } else if(type=== 'editor'){ let srcdoc = i.srcdoc; i.srcdoc = ''; for(let node of [h,c,j]){ node.innerText = node.value; } text = `data:text/html,${document.documentElement.innerHTML}`; i.srcdoc = srcdoc; } if(copy(text)){ msg.innerText = `copy ${type} success!`; setTimeout(v=>msg.innerText='',2000); } } function copy(text) { var node = document.createElement('textarea'); node.innerHTML = text; document.body.appendChild(node); node.select(); var result = document.execCommand('copy'); document.body.removeChild(node); return result; } run(); </script>
+
+Here is the source code [](fiddle.html)
+
+## Inspired by
+- https://github.com/umpox/TinyEditor
