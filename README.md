@@ -1,5 +1,5 @@
-# local-jsfiddle
-Mini Js Fiddle for local. It supports:
+# Local-jsfiddle
+Mini Js Fiddle for local machine. It supports:
 - [x] Support Shortcuts:  `F5`: Run; `Ctrl+U`: Delete from cursor to head
 - [x] Support Toggle auto run
 - [x] Support Copy rendered page and editor
@@ -12,7 +12,7 @@ Add the following special url into your browser's bookmark:
 
 More:
 - The source code [](fiddle.html)
-- The clock demo [](fiddle-clock.html)
+- The clock demo [](https://rawgit.com/ahuigo/local-jsfiddle/master/fiddle-clock.html)
 
 ## Inspired by
 - https://github.com/umpox/TinyEditor
