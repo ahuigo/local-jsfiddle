@@ -16,7 +16,9 @@ Add the following special url into your browser's bookmark:
 
 More:
 - The source code [fiddle.html](fiddle.html)
-- The clock demo [fiddle-clock.html](https://rawgit.com/ahuigo/local-jsfiddle/master/fiddle-clock.html)
+- Some demoes:
+    - [fiddle.html](https://rawgit.com/ahuigo/local-jsfiddle/master/fiddle.html)
+    - [fiddle-clock.html](https://rawgit.com/ahuigo/local-jsfiddle/master/fiddle-clock.html)
 
 ## Inspired by
 - https://github.com/umpox/TinyEditor
