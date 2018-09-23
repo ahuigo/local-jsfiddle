@@ -36,23 +36,34 @@ cdn.onchange = function(){
     }
 };
 document.addEventListener('keydown', e=>{
-    if (e.keyCode === 9 && e.target.tagName === 'TEXTAREA') {
-        var target = e.target;   
-        var start = target.selectionStart;   
-        var end = target.selectionEnd;
-        target.value=target.value.slice(0, start) + "\t" + target.value.slice(end);
-        target.selectionStart = target.selectionEnd = start + 1;
-        e.preventDefault();
-    }else if(e.key==='F5'){
+    if(e.key==='F5'){
         run();
-    }else if(e.ctrlKey && e.keyCode===85 && e.target.tagName === 'TEXTAREA') {
+    }
+    if(e.target.tagName === 'TEXTAREA'){
         var target = e.target;   
-        var start = target.selectionStart;   
-        var end = target.selectionEnd;
-        var start = target.value.slice(0, start).lastIndexOf('\n')+1;
-        target.value=target.value.slice(0, start) + target.value.slice(end);
-        target.selectionStart = target.selectionEnd = start;
-        e.preventDefault();
+        if (e.keyCode === 9) {
+            var start = target.selectionStart;   
+            var end = target.selectionEnd;
+            target.value=target.value.slice(0, start) + "\t" + target.value.slice(end);
+            target.selectionStart = target.selectionEnd = start + 1;
+            e.preventDefault();
+        } else if(e.ctrlKey && e.keyCode===85) {
+            var start = target.selectionStart;   
+            var end = target.selectionEnd;
+            var start = target.value.slice(0, start).lastIndexOf('\n')+1;
+            target.value=target.value.slice(0, start) + target.value.slice(end);
+            target.selectionStart = target.selectionEnd = start;
+            e.preventDefault();
+        }else if(e.ctrlKey && e.code==='KeyW') {
+            var start = target.selectionStart;   
+            var end = target.selectionEnd;
+            let m = target.value.slice(0, start).match(/(\s*\S+\s*|\s+|.)$/);
+            if(m){
+                target.value=target.value.slice(0, m.index) + target.value.slice(end);
+                target.selectionStart = target.selectionEnd = m.index;
+            }
+            e.preventDefault();
+        }
     }
 });
 function run(){ i.srcdoc=h.value+'<style>'+c.value+'</style><script>'+j.value+'<\/script>';
