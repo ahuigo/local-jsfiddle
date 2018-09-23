@@ -7,21 +7,33 @@
     <textarea placeholder=HTML id=h></textarea>
     <textarea placeholder=CSS id=c></textarea>
     <div>
-    <button onclick="loadjs(this)">dexie</button>
-    <input type="checkbox" id="autorun" checked> AutoRun
-    <button onclick="run()">Run</button>
-    <button onclick="open_page('page')">Open Page</button>
-    <button onclick="copy_html('page')">Copy Page</button>
-    <button onclick="copy_html('editor')">Copy Editor</button>
-    <span style="color:red" id=msg></span>
-    F5: Run;
-    MacOSX Tips: Ctrl+A:Head, Ctrl+E:End, Ctrl+F:Right, Ctrl+B:Left, Ctrl+N:Next Line, Ctrl+P: Previous Line
+        <select id="cdn"> </select>
+        <input type="checkbox" id="autorun" checked> AutoRun
+        <button onclick="run()">Run</button>
+        <button onclick="open_page('page')">Open Page</button>
+        <button onclick="copy_html('page')">Copy Page</button>
+        <button onclick="copy_html('editor')">Copy Editor</button>
+        <span style="color:red" id=msg></span>
+        F5: Run, Ctrl+U: Delete Head;
+        MacOSX Tips: Ctrl+A:Head, Ctrl+E:End, Ctrl+F:Right, Ctrl+B:Left, Ctrl+N:Next Line, Ctrl+P: Previous Line
     </div>
     <textarea placeholder=JS id=j></textarea>
 <iframe id=i></iframe>
 <script>
 let cdnjs = {
     'dexie': 'https://unpkg.com/dexie@latest/dist/dexie.js',
+    'vue': 'https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.min.js',
+    'jquery': 'https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js',
+};
+cdn.innerHTML=`<option>loadjs</option>`;
+for(let k in cdnjs){
+    cdn.innerHTML+=`<option>${k}</option>`;
+}
+cdn.onchange = function(){
+    let src = cdnjs[this.value];
+    if(src){
+        h.value = `<script src="${src}"></`+`script>\n`+ h.value;
+    }
 };
 document.addEventListener('keydown', e=>{
     if (e.keyCode === 9 && e.target.tagName === 'TEXTAREA') {
@@ -33,19 +45,22 @@ document.addEventListener('keydown', e=>{
         e.preventDefault();
     }else if(e.key==='F5'){
         run();
+    }else if(e.ctrlKey && e.keyCode===85 && e.target.tagName === 'TEXTAREA') {
+        var target = e.target;   
+        var start = target.selectionStart;   
+        var end = target.selectionEnd;
+        var start = target.value.slice(0, start).lastIndexOf('\n')+1;
+        target.value=target.value.slice(0, start) + target.value.slice(end);
+        target.selectionStart = target.selectionEnd = start;
+        e.preventDefault();
     }
 });
-function loadjs(target){
-    let src = cdnjs[target.innerText];
-    h.value = `<script src="${src}"></`+`script>`+ h.value;
-}
-function run(){
-    i.srcdoc=h.value+'<style>'+c.value+'</style><script>'+j.value+'<\/script>';
+function run(){ i.srcdoc=h.value+'<style>'+c.value+'</style><script>'+j.value+'<\/script>';
 }
 function open_page(type){
     let h = `${i.srcdoc}`;
     console.log(h);
-    let page = window.open('blank.html');
+    let page = window.open();
     page.document.write(h);
 }
 function copy_html(type){
