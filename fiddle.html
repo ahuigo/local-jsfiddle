@@ -9,17 +9,18 @@
     <div>
         <select id="cdn"> </select>
         <input type="checkbox" id="autorun" checked> AutoRun
-        <button onclick="run()">Run</button>
+        <button onclick="run()">Run(F5)</button>
         <button onclick="open_page('page')">Open Page</button>
         <button onclick="copy_html('page')">Copy Page</button>
         <button onclick="copy_html('editor')">Copy Editor</button>
         <span style="color:red" id=msg></span>
-        F5: Run, Ctrl+U: Delete Head; Ctrl+W: Delete Word
+        F5: Run, Ctrl+U: Delete Head; Ctrl+W: Delete Word; Shift+Tab: Switch Textarea
         MacOSX Tips: Ctrl+A:Head, Ctrl+E:End, Ctrl+F:Right, Ctrl+B:Left, Ctrl+N:Next Line, Ctrl+P: Previous Line
     </div>
     <textarea placeholder=JS id=j></textarea>
 <iframe id=i></iframe>
 <script>
+log = console.log;
 let cdnjs = {
     'dexie': 'https://unpkg.com/dexie@latest/dist/dexie.js',
     'vue': 'https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.min.js',
@@ -41,28 +42,49 @@ document.addEventListener('keydown', e=>{
     }
     if(e.target.tagName === 'TEXTAREA'){
         var target = e.target;   
-        if (e.keyCode === 9) {
-            var start = target.selectionStart;   
-            var end = target.selectionEnd;
-            target.value=target.value.slice(0, start) + "\t" + target.value.slice(end);
-            target.selectionStart = target.selectionEnd = start + 1;
-            e.preventDefault();
-        } else if(e.ctrlKey && e.keyCode===85) {
-            var start = target.selectionStart;   
-            var end = target.selectionEnd;
-            var start = target.value.slice(0, start).lastIndexOf('\n')+1;
-            target.value=target.value.slice(0, start) + target.value.slice(end);
-            target.selectionStart = target.selectionEnd = start;
-            e.preventDefault();
-        }else if(e.ctrlKey && e.code==='KeyW') {
-            var start = target.selectionStart;   
-            var end = target.selectionEnd;
-            let m = target.value.slice(0, start).match(/(\s*\S+\s*|\s+|.)$/);
-            if(m){
-                target.value=target.value.slice(0, m.index) + target.value.slice(end);
-                target.selectionStart = target.selectionEnd = m.index;
+        if(e.ctrlKey){
+            if(e.ctrlKey && e.keyCode===85) {
+                var start = target.selectionStart;   
+                var end = target.selectionEnd;
+                var start = target.value.slice(0, start).lastIndexOf('\n')+1;
+                target.value=target.value.slice(0, start) + target.value.slice(end);
+                target.selectionStart = target.selectionEnd = start;
+                e.preventDefault();
+            }else if(e.ctrlKey && e.code==='KeyW') {
+                var start = target.selectionStart;   
+                var end = target.selectionEnd;
+                let m = target.value.slice(0, start).match(/(\s*\S+\s*|\s+|.)$/);
+                if(m){
+                    target.value=target.value.slice(0, m.index) + target.value.slice(end);
+                    target.selectionStart = target.selectionEnd = m.index;
+                }
+                e.preventDefault();
+            }else if(e.keyCode===9){
+
+
             }
-            e.preventDefault();
+        }else{
+            if(e.shiftKey){
+                console.log(e);
+                if (e.keyCode === 9) {
+                    let eles = [h,j,c];
+                    for(const [i,ele] of eles.entries()){
+                        if(document.activeElement === ele){
+                            eles[(i+1)%3].focus();
+                            e.preventDefault();
+                            break;
+                        }
+                    }
+                }
+            }else{
+                if (e.keyCode === 9) {
+                    var start = target.selectionStart;   
+                    var end = target.selectionEnd;
+                    target.value=target.value.slice(0, start) + "\t" + target.value.slice(end);
+                    target.selectionStart = target.selectionEnd = start + 1;
+                    e.preventDefault();
+                } 
+            }
         }
     }
 });
