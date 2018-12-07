@@ -7,7 +7,8 @@
     <textarea placeholder=HTML id=h></textarea>
     <textarea placeholder=CSS id=c></textarea>
     <div>
-        <select id="cdn"> </select>
+        <select id="cdnjsId"> </select>
+        <select id="cdncssId"> </select>
         <input type="checkbox" id="autorun" checked> AutoRun
         <button onclick="run()">Run(F5)</button>
         <button onclick="open_page('page')">Open Page</button>
@@ -21,21 +22,34 @@
 <iframe id=i></iframe>
 <script>
 log = console.log;
-let cdnjs = {
+var cdncss = {
+    'bulma':"https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css",
+    'pure':'https://cdnjs.cloudflare.com/ajax/libs/pure/1.0.0/pure-min.css',
+};
+var cdnjs = {
     'dexie': 'https://unpkg.com/dexie@latest/dist/dexie.js',
     'vue': 'https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.min.js',
     'jquery': 'https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js',
 };
-cdn.innerHTML=`<option>loadjs</option>`;
-for(let k in cdnjs){
-    cdn.innerHTML+=`<option>${k}</option>`;
-}
-cdn.onchange = function(){
-    let src = cdnjs[this.value];
-    if(src){
-        h.value = `<script src="${src}"></`+`script>\n`+ h.value;
+/*load css and js */
+cdnjsId.innerHTML=`<option>loadjs</option>`;
+cdncssId.innerHTML=`<option>loadcss</option>`;
+for(let cdnname of ['cdnjs','cdncss']){
+    let cdnnode = window[cdnname+'Id'];
+    let cdnvar = window[cdnname];
+    for(let k in window[cdnname]){
+        cdnnode.innerHTML+=`<option>${k}</option>`;
     }
-};
+    cdnnode.onchange = function(){
+        let src = cdnvar[this.value];
+        if(!src){return}
+        if(cdnname==='cdnjs'){
+            h.value = `<script src="${src}"></`+`script>\n`+ h.value;
+        }else{
+            h.value = `<link rel="stylesheet" href="${src}">\n`+ h.value;
+        }
+    };
+}
 document.addEventListener('keydown', e=>{
     if(e.key==='F5'){
         run();
