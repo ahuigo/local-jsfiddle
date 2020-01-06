@@ -86,7 +86,7 @@ document.addEventListener('keydown', e=>{
             }
         }else{
             if(e.shiftKey){
-                console.log(e);
+                console.log(e);//switch textarea
                 if (e.keyCode === 9) {
                     let eles = [h,j,c];
                     for(const [i,ele] of eles.entries()){
@@ -97,14 +97,21 @@ document.addEventListener('keydown', e=>{
                         }
                     }
                 }
-            }else{
-                if (e.keyCode === 9) {
+            }else if (e.code ==='Enter') {
+                    var start = target.selectionStart;   
+                    var end = target.selectionEnd;
+                    var leftText = target.value.slice(0, start) 
+                    var rightText = target.value.slice(end);
+                    const insertText = '\n'+leftText.split('\n').pop().replace(/[^\s].+/,'')
+                    target.value= `${leftText}${insertText}${rightText}`
+                    target.selectionStart = target.selectionEnd = start + insertText.length;
+                    e.preventDefault();
+            }else if (e.keyCode === 9) {
                     var start = target.selectionStart;   
                     var end = target.selectionEnd;
                     target.value=target.value.slice(0, start) + "\t" + target.value.slice(end);
                     target.selectionStart = target.selectionEnd = start + 1;
                     e.preventDefault();
-                } 
             }
         }
     }
@@ -145,3 +152,4 @@ function copy(text) {
 }
 run();
 </script>
+
