@@ -23,13 +23,15 @@
 <script>
 log = console.log;
 var cdncss = {
-    'bulma':"https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css",
-    'pure':'https://cdnjs.cloudflare.com/ajax/libs/pure/1.0.0/pure-min.css',
+    bulma:"https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css",
+    pure:'https://cdnjs.cloudflare.com/ajax/libs/pure/1.0.0/pure-min.css',
 };
 var cdnjs = {
-    'dexie': 'https://unpkg.com/dexie@latest/dist/dexie.js',
-    'vue': 'https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.min.js',
-    'jquery': 'https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js',
+    dexie: 'https://unpkg.com/dexie@latest/dist/dexie.js',
+    react: ["https://unpkg.com/react@16/umd/react.production.min.js",
+            "https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"],
+    vue: 'https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.min.js',
+    jquery: 'https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js',
 };
 /*load css and js */
 cdnjsId.innerHTML=`<option>loadjs</option>`;
@@ -41,13 +43,18 @@ for(let cdnname of ['cdnjs','cdncss']){
         cdnnode.innerHTML+=`<option>${k}</option>`;
     }
     cdnnode.onchange = function(){
-        let src = cdnvar[this.value];
+        const src = cdnvar[this.value];
         if(!src){return}
-        if(cdnname==='cdnjs'){
-            h.value = `<script src="${src}"></`+`script>\n`+ h.value;
-        }else{
-            h.value = `<link rel="stylesheet" href="${src}">\n`+ h.value;
+        const srcList = (src instanceof Array)?src:[src];
+        let cdnHTML = '';
+        for(const src of srcList){
+            if(cdnname==='cdnjs'){
+                cdnHTML += `<script src="${src}"></`+`script>\n`;
+            }else{
+                cdnHTML += `<link rel="stylesheet" href="${src}">\n`;
+            }
         }
+        h.value = cdnHTML + h.value;
     };
 }
 document.addEventListener('keydown', e=>{
